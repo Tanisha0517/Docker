@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanisha - Gallery - Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            background: #1a2b47;
+            padding: 1.2rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        nav a {
+            color: #e8e8e8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #d4a574;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        nav a:hover {
+            color: #d4a574;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #1a2b47 0%, #2d4563 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header h1 {
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            margin-bottom: 1rem;
+            font-weight: 800;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            color: #333;
+            font-weight: 800;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            height: 300px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #1a2b47 0%, #2d4563 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+            transition: all 0.4s ease;
+        }
+
+        .gallery-item:hover::before {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05) translateY(-10px);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.3);
+        }
+
+        .gallery-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            width: 100%;
+            padding: 2rem;
+        }
+
+        .gallery-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .gallery-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .gallery-description {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .gallery-item:hover .gallery-description {
+            opacity: 1;
+        }
+
+        /* Filter Buttons */
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 2px solid #1a2b47;
+            color: #1a2b47;
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: linear-gradient(135deg, #1a2b47 0%, #2d4563 100%);
+            color: white;
+            border-color: #1a2b47;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+            text-align: center;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1a2b47;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a2b47;
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #d4a574;
+        }
+
+        footer p {
+            margin: 0.8rem 0;
+            font-weight: 300;
+        }
+
+        .footer-links {
+            margin: 1.5rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #d4a574;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 600;
+        }
+
+        .footer-links a:hover {
+            color: #f5f5f5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 3rem 1rem;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .gallery-item {
+                height: 250px;
+            }
+
+            .filter-buttons {
+                gap: 0.7rem;
+            }
+
+            .filter-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.85rem;
+            }
+
+            .stats-section {
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            nav {
+                padding: 1rem;
+            }
+
+            nav a {
+                font-size: 0.9rem;
+            }
+
+            .page-header {
+                padding: 2rem 1rem;
+            }
+
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            .gallery-grid {
+                gap: 1.5rem;
+            }
+
+            .gallery-item {
+                height: 200px;
+            }
+
+            .gallery-icon {
+                font-size: 2.5rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .gallery-title {
+                font-size: 1.1rem;
+            }
+
+            .gallery-description {
+                font-size: 0.8rem;
+            }
+
+            .filter-buttons {
+                gap: 0.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .filter-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="portfolio.html">Home</a></li>
+            <li><a href="skills.html">Skills</a></li>
+            <li><a href="achievements.html">Achievements</a></li>
+            <li><a href="resume.html">Resume</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+        </ul>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <h1>My Gallery</h1>
+        <p>Explore my best projects and creative works</p>
+    </section>
+
+    <!-- Content -->
+    <div class="container">
+        <!-- Filter Buttons -->
+        <div class="filter-buttons">
+            <button class="filter-btn active">All Projects</button>
+            <button class="filter-btn">Web Design</button>
+            <button class="filter-btn">Development</button>
+            <button class="filter-btn">Mobile Apps</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Projects Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100+</div>
+                <div class="stat-label">Happy Clients</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">200+</div>
+                <div class="stat-label">Designs Created</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">6+</div>
+                <div class="stat-label">Years Experience</div>
+            </div>
+        </div>
+
+        <!-- Gallery Grid -->
+        <h2 class="section-title">Featured Projects</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <div class="gallery-content">
+                    <span class="gallery-icon">🌐</span>
+                    <div class="gallery-title">E-Commerce Platform</div>
+                    <div class="gallery-description">Built a full-featured e-commerce site with React and Node.js</div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="gallery-content">
+                    <span class="gallery-icon">📱</span>
+                    <div class="gallery-title">Mobile App Development</div>
+                    <div class="gallery-description">Created cross-platform mobile apps for iOS and Android</div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="gallery-content">
+                    <span class="gallery-icon">🎨</span>
+                    <div class="gallery-title">UI/UX Design System</div>
+                    <div class="gallery-description">Designed a comprehensive design system for 50+ components</div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="gallery-content">
+                    <span class="gallery-icon">📊</span>
+                    <div class="gallery-title">Dashboard Analytics</div>
+                    <div class="gallery-description">Built interactive analytics dashboard with real-time data</div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="gallery-content">
+                    <span class="gallery-icon">🔐</span>
+                    <div class="gallery-title">Security Portal</div>
+                    <div class="gallery-description">Developed secure authentication system with encryption</div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="gallery-content">
+                    <span class="gallery-icon">🚀</span>
+                    <div class="gallery-title">SaaS Platform</div>
+                    <div class="gallery-description">Launched scalable SaaS application serving 5000+ users</div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="gallery-content">
+                    <span class="gallery-icon">💼</span>
+                    <div class="gallery-title">Corporate Website</div>
+                    <div class="gallery-description">Designed modern corporate website with CMS integration</div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="gallery-content">
+                    <span class="gallery-icon">🎯</span>
+                    <div class="gallery-title">Conversion Optimization</div>
+                    <div class="gallery-description">Improved conversion rate by 45% through A/B testing</div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="gallery-content">
+                    <span class="gallery-icon">🌟</span>
+                    <div class="gallery-title">Brand Redesign</div>
+                    <div class="gallery-description">Complete rebrand and website redesign for Fortune 500</div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="gallery-content">
+                    <span class="gallery-icon">🔧</span>
+                    <div class="gallery-title">Performance Optimization</div>
+                    <div class="gallery-description">Optimized application, reduced load time by 60%</div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="gallery-content">
+                    <span class="gallery-icon">📚</span>
+                    <div class="gallery-title">E-Learning Platform</div>
+                    <div class="gallery-description">Created interactive e-learning platform with 500+ courses</div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <div class="gallery-content">
+                    <span class="gallery-icon">🎬</span>
+                    <div class="gallery-title">Video Streaming App</div>
+                    <div class="gallery-description">Built video streaming platform with adaptive bitrate</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Email: tanisha@portfolio.com | Phone: +1 (555) 123-4567</p>
+        <div class="footer-links">
+            <a href="portfolio.html">Home</a>
+            <a href="skills.html">Skills</a>
+            <a href="achievements.html">Achievements</a>
+            <a href="resume.html">Resume</a>
+            <a href="gallery.html">Gallery</a>
+        </div>
+        <p>&copy; 2026 Tanisha's Portfolio. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Simple filter functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
